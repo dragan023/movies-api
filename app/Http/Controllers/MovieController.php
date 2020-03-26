@@ -12,9 +12,11 @@ class MovieController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Movie::all();
+        $movies = Movie::search($request->title);
+
+        return $movies;
     }
 
     /**
@@ -95,7 +97,7 @@ class MovieController extends Controller
             'relaseDate' => 'required|unique:movies',
             'imageUrl' => 'url',
         ]);
-        
+
         $movie = Movie::find($id);
         $movie->title = $request->input('title');
         $movie->director = $request->input('director');

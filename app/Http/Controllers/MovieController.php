@@ -14,9 +14,7 @@ class MovieController extends Controller
      */
     public function index(Request $request)
     {
-        $movies = Movie::search($request->title);
-
-        return $movies;
+        return Movie::search($request->title, $request->input('take', 10), $request->input('skip', 0));
     }
 
     /**
@@ -45,14 +43,7 @@ class MovieController extends Controller
             'imageUrl' => 'url',
         ]);
 
-        $movie = new Movie();
-        $movie->title = $request->input('title');
-        $movie->director = $request->input('director');
-        $movie->imageUrl = $request->input('imageUrl');
-        $movie->duration = $request->input('duration');
-        $movie->relaseDate = $request->input('relaseDate');
-        $movie->genre = $request->input('genre');
-        $movie->save();
+        $movie = Movie::create($request->all());
 
         return $movie;
     }
@@ -99,13 +90,10 @@ class MovieController extends Controller
         ]);
 
         $movie = Movie::find($id);
-        $movie->title = $request->input('title');
-        $movie->director = $request->input('director');
-        $movie->imageUrl = $request->input('imageUrl');
-        $movie->duration = $request->input('duration');
-        $movie->relaseDate = $request->input('relaseDate');
-        $movie->genre = $request->input('genre');
+        $movie->update($request->all());
         $movie->save();
+
+        info($request);
 
         return $movie;
     }
@@ -119,7 +107,6 @@ class MovieController extends Controller
     public function destroy($id)
     {
         $movie = Movie::find($id)->delete();
-        info($movie);
         
         return true;
     }
